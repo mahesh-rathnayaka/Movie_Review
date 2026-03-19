@@ -3,22 +3,26 @@
 {% block title %} Register - Movie Review Website{% endblock title %}
 <!--  -->
 {% block content %}
-<!--  -->
-    <div class="flex items-center justify-center">
-      <main class="w-full lg:w-3/5 p-5">
-      <form
-        action=""
-        method="post"
-        enctype="multipart/form-data"
-        class="bg-pLightPurple text-gray-300 flex flex-col gap-4 w-full rounded-xl shadow-xl p-5"
-      >
+<main class="bg-gradient-to-b from-slate-950/80 via-slate-950 to-black min-h-screen flex items-center justify-center px-4 py-10">
+  <section class="w-full max-w-2xl">
+    <form
+      action=""
+      method="post"
+      enctype="multipart/form-data"
+      class="bg-pLightPurple/95 text-gray-300 flex flex-col gap-4 w-full rounded-2xl shadow-2xl p-6 md:p-7 border border-white/10"
+    >
       {% csrf_token %}
-        <p class="text-center font-semibold text-2xl text-pgreen">
+      <header class="text-center mb-2 space-y-1">
+        <p class="text-xs font-semibold tracking-[0.25em] uppercase text-pgreen">
+          Join us
+        </p>
+        <p class="font-semibold text-2xl text-white">
           Create an account for free
         </p>
+      </header>
         <!-- First name -->
         <div class="flex flex-col gap-2">
-          <label for="firstname">First Name</label>
+          <label for="firstname" class="text-sm">First Name</label>
           <input
             type="text"
             name="firstname"
@@ -28,7 +32,7 @@
         </div>
         <!-- Last name -->
         <div class="flex flex-col gap-2">
-          <label for="lastname">Last Name</label>
+          <label for="lastname" class="text-sm">Last Name</label>
           <input
             type="text"
             name="lastname"
@@ -38,7 +42,7 @@
         </div>
         <!-- Username -->
         <div class="flex flex-col gap-2">
-          <label for="username">Username</label>
+          <label for="username" class="text-sm">Username</label>
           <input
             type="text"
             name="username"
@@ -48,7 +52,7 @@
         </div>
         <!-- Email -->
         <div class="flex flex-col gap-2">
-          <label for="email">Email</label>
+          <label for="email" class="text-sm">Email</label>
           <input
             type="email"
             name="email"
@@ -58,7 +62,7 @@
         </div>
         <!-- Password -->
         <div class="flex flex-col gap-2">
-          <label for="password">Passwword</label>
+          <label for="password">Password</label>
           <input
             type="password"
             name="password"
@@ -68,7 +72,7 @@
         </div>
         <!-- Password Repeat -->
         <div class="flex flex-col gap-2">
-          <label for="password2">Passwword</label>
+          <label for="password2">Confirm password</label>
           <input
             type="password"
             name="password2"
@@ -78,7 +82,7 @@
         </div>
         <!-- Avatar -->
         <div class="flex flex-col gap-2">
-          <label for="avatar">Profile Picture</label>
+          <label for="avatar" class="text-sm">Profile picture</label>
           <input
             type="file"
             name="avatar"
@@ -87,28 +91,25 @@
           />
         </div>
         <!-- Submit and Reset -->
-        <div class="flex gap-2">
+        <div class="flex gap-3 items-center mt-2">
           <button
             type="submit"
-            class="py-1 px-6 text-white bg-gradient-to-br from-orangeOne to-orangeTwo rounded-xl"
+            class="py-2 px-6 text-white bg-gradient-to-r from-orangeOne to-orangeTwo rounded-xl shadow-lg hover:shadow-xl text-sm"
           >
             Submit
           </button>
           <button
             type="reset"
-            class="py-1 px-6 bg-pgreen text-white rounded-xl"
+            class="py-2 px-6 bg-pgreen text-white rounded-xl text-sm"
           >
             Reset
           </button>
         </div>
-        <p>
-          Already have an account? &nbsp;
-          <a href="{% url 'login' %}" class="font-bold underline">Login</a>
+        <p class="text-xs text-gray-200 mt-2">
+          Already have an account?&nbsp;
+          <a href="{% url 'login' %}" class="font-bold underline text-pgreen">Login</a>
         </p>
       </form>
-    </main>
-    </div>
-
-    
-  
+  </section>
+</main>
 {% endblock content %}

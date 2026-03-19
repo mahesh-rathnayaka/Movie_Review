@@ -1,286 +1,268 @@
 {% extends 'main.html' %}
 {% load static %}
-<!--  -->
-{% block title %} Movie Review Website {% endblock title %}
-<!--  -->
+
 {% block content %}
-<!--  -->
-{% include 'main_navbar.html' %}
-<main class="p-5 text-white">
-  <!-- Top -->
-  <div class="flex flex-col lg:flex-row gap-5">
-    <!-- Image -->
-    <div
-      class="w-full sm:w-4/5 lg:w-2/5 bg-cover bg-no-repeat bg-center rounded-lg h-[40vh] lg:h-auto"
-      style="background-image: url('{{ movie.image.url }}');"
-    ></div>
-    <!-- Details -->
-    <div class="w-ful flex flex-col gap-3 sm:w-4/5 lg:w-2/5">
-      <p class="text-pred font-bold text-2xl">{{ movie.title }}</p>
-      <p class="font-semibold text-pgreen text-base">
-        Producer:
-        <span class="text-white font-medium">{{ movie.producer }}</span>
-      </p>
-      <p class="font-semibold text-pgreen text-base">
-        Year: <span class="text-white font-medium">{{ movie.year }}</span>
-      </p>
-      <p class="font-semibold text-pgreen text-base">
-        Category:
-        <span class="text-white font-medium">{{ movie.category }}</span>
-      </p>
-      <p class="font-semibold text-pgreen text-base">
-        Rating:
-        <span class="text-white font-medium"
-          >{{ movie.average_rating | floatformat:2 }}</span
-        >
-      </p>
-      <p class="text-base text-justify">{{ movie.description }}</p>
-      {% if request.user == movie.owner %}
-      <a
-        href="{% url 'update_movie' movie.slug movie.id %}"
-        class="py-2 px-5 bg-pgreen rounded w-fit text-white"
-        >Edit Movie</a
-      >
-      {% endif %}
-    </div>
-  </div>
-  <!-- Bottom -->
-  <div class="flex flex-col gap-3 mt-10 sm:flex-row">
-    <div class="w-full sm:w-2/5 lg:w-[25%]">
-      <form
-        action=""
-        method="post"
-        class="p-5 bg-pLightPurple shadow-md rounded-2xl flex flex-col gap-3"
-      >
-      {% csrf_token %}
-        <p class="text-pgreen text-center font-semibold text-xl">
-          Add a review
-        </p>
-        <!-- username -->
-        <div class="flex flex-col">
-          <label for="username" class="font-medium text-white/80"
-            >Username</label
-          >
-          <input
-            type="text"
-            name="username"
-            readonly
-            id="username"
-            value="{{request.user.username}}"
-            class="bg-pgray p-2 rounded-xl text-xl border-2 border-white/10 focus-within:outline-none"
-          />
-        </div>
-        <!-- Rating -->
-        <div class="flex gap-4 flex-col">
-          <label for="rating" class="font-medium text-white/80">Rating</label>
-          <input
-            type="range"
-            min="1"
-            max="10"
-            value="5"
-            step="0.1"
-            id="rating"
-            name="rating"
-            class="slider h-1 bg-pgreen/40 w-full rounded-lg appearance-none cursor-pointer"
-          />
-          <span id="rate">5.0</span>
-          <!-- Comment -->
-          <div class="flex flex-col">
-            <label for="comment" class="font-medium text-white/80"
-              >Comment</label
-            >
-            <textarea
-              name="comment"
-              id="comment"
-              rows="5"
-              class="bg-pgray/40 p-2 rounded-xl text-xl border-2 border-white/10 focus:outline-none"
-            ></textarea>
-          </div>
-          <!-- Submit -->
-          <div class="">
-            <input
-              type="submit"
-              class="py-2 px-5 bg-pgreen text-white font-semibold text-center rounded-xl w-full cursor-pointer"
-            />
-          </div>
-        </div>
-      </form>
-    </div>
-    <!-- Right: Reviews and Similar Movies -->
-    <div
-      class="w-full flex justify-between flex-col gap-3 lg:flex-row sm:w-3/5 lg:flex-1"
-    >
-      <!-- Reviews -->
-      <div class="w-full flex flex-col gap-3 lg:flex-1">
-        <p class="text-xl font-semibold text-pgreen text-center">Reviews</p>
-        {% for comment in comments %}
-        <!-- Review -->
-        <div
-          class="w-full flex flex-col gap-1 justify-between p-5 bg-pLightPurple rounded-xl shadow-md sm:flex-row"
-        >
-          <!-- Left: Avatar -->
-          <div class="w-14 h-14 rounded-full">
+  {% include 'main_navbar.html' %}
+
+  <main class="px-4 py-8 text-gray-100 bg-gradient-to-b from-slate-950/80 via-slate-950 to-black min-h-[calc(100vh-4rem)]">
+    <div class="max-w-6xl mx-auto space-y-8">
+      <!-- Top: movie details + review form -->
+      <div class="flex flex-col lg:flex-row gap-6">
+        <!-- Movie details -->
+        <section class="flex-1 bg-pLightPurple/90 rounded-2xl shadow-xl border border-white/10 overflow-hidden flex flex-col md:flex-row">
+          <div class="md:w-2/5 relative">
             <img
-              src="{% if comment.profile.avatar %}{{ comment.profile.avatar.url }}{% else %}{% static 'media/user_avatars/default_avatar.jpg' %}{% endif %}"
-              alt="profile picture"
-              class="w-14 h-14 rounded-full"
+              src="{{movie.image.url}}"
+              alt="Movie poster"
+              class="h-full w-full max-h-[360px] object-cover"
             />
+            <div class="absolute inset-0 bg-gradient-to-t from-black/70 via-black/0 to-black/10"></div>
           </div>
-          <!-- Right: Name, Time, Comment -->
-          <div class="flex w-full sm:w-[85%] flex-col">
-            <p class="font-semibold text-pgreen">
-              {{ comment.person.username }}
-            </p>
-            <p class="text-gray-300">{{ comment.created | timesince}} ago</p>
-            <p class="mt-2 text-justify">{{ comment.comment }}</p>
-            <!-- Rate and Buttons -->
-            <div class="w-full flex mt-2 justify-between">
-              <!-- Rate -->
-              <div class="flex font-bold text-gray-300">
-                Rate
-                <span class="ml-2 flex text-pred"
-                  >{{ comment.rate.rating }}<svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    fill="#ff803d"
-                    class="w-5 h-5"
-                  >
-                    <path
-                      fill-rule="evenodd"
-                      d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.006 5.404.434c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.434 2.082-5.005Z"
-                      clip-rule="evenodd"
-                    />
-                  </svg>
+          <div class="flex-1 p-5 md:p-6 space-y-3 flex flex-col justify-between">
+            <div class="space-y-2">
+              <p class="text-xs font-semibold tracking-[0.2em] uppercase text-pgreen">
+                {{ movie.category }} • {{ movie.year }}
+              </p>
+              <h1 class="text-2xl md:text-3xl font-bold text-white flex flex-wrap gap-2">
+                {{ movie.title }}
+              </h1>
+              <p class="text-sm text-gray-200 max-w-xl">
+                {{ movie.description }}
+              </p>
+            </div>
+            <div class="flex flex-wrap items-center justify-between gap-4 pt-2 border-t border-white/5 mt-3">
+              <div class="flex items-center gap-4">
+                <div class="flex items-center gap-2">
+                  <div class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-pgray text-pgreen text-lg">⭐</div>
+                  <div>
+                    <p class="text-lg font-semibold">
+                      {{ movie.average_rating|floatformat:2 }}
+                    </p>
+                    <p class="text-xs text-gray-300">
+                      {{ movie.reviews.count }} review{{ movie.reviews.count|pluralize }}
+                    </p>
+                  </div>
+                </div>
+                <p class="text-xs text-gray-300">
+                  Added by <span class="font-semibold text-porange">{{ movie.owner }}</span>
+                </p>
+              </div>
+              <div class="flex gap-2 text-xs">
+                <span class="inline-flex items-center gap-1 rounded-full bg-pgray/60 px-3 py-1">
+                  <span class="w-2 h-2 rounded-full bg-pgreen"></span>
+                  Average score
                 </span>
               </div>
-              <!-- Buttons -->
-              {% if request.user == comment.person %}
-              <div class="flex gap-3">
-                <!-- Edit -->
-                <a href="{% url 'update_comment' comment.id %}"
-                  ><svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    fill="#51c419"
-                    class="w-6 h-6"
-                  >
-                    <path
-                      d="M21.731 2.269a2.625 2.625 0 0 0-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 0 0 0-3.712ZM19.513 8.199l-3.712-3.712-8.4 8.4a5.25 5.25 0 0 0-1.32 2.214l-.8 2.685a.75.75 0 0 0 .933.933l2.685-.8a5.25 5.25 0 0 0 2.214-1.32l8.4-8.4Z"
-                    />
-                    <path
-                      d="M5.25 5.25a3 3 0 0 0-3 3v10.5a3 3 0 0 0 3 3h10.5a3 3 0 0 0 3-3V13.5a.75.75 0 0 0-1.5 0v5.25a1.5 1.5 0 0 1-1.5 1.5H5.25a1.5 1.5 0 0 1-1.5-1.5V8.25a1.5 1.5 0 0 1 1.5-1.5h5.25a.75.75 0 0 0 0-1.5H5.25Z"
-                    />
-                  </svg>
-                </a>
-                <!-- Delete -->
-                <a href="{% url 'delete_comment' comment.id %}"
-                  ><svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    fill="#fd384f"
-                    class="w-6 h-6"
-                  >
-                    <path
-                      fill-rule="evenodd"
-                      d="M16.5 4.478v.227a48.816 48.816 0 0 1 3.878.512.75.75 0 1 1-.256 1.478l-.209-.035-1.005 13.07a3 3 0 0 1-2.991 2.77H8.084a3 3 0 0 1-2.991-2.77L4.087 6.66l-.209.035a.75.75 0 0 1-.256-1.478A48.567 48.567 0 0 1 7.5 4.705v-.227c0-1.564 1.213-2.9 2.816-2.951a52.662 52.662 0 0 1 3.369 0c1.603.051 2.815 1.387 2.815 2.951Zm-6.136-1.452a51.196 51.196 0 0 1 3.273 0C14.39 3.05 15 3.684 15 4.478v.113a49.488 49.488 0 0 0-6 0v-.113c0-.794.609-1.428 1.364-1.452Zm-.355 5.945a.75.75 0 1 0-1.5.058l.347 9a.75.75 0 1 0 1.499-.058l-.346-9Zm5.48.058a.75.75 0 1 0-1.498-.058l-.347 9a.75.75 0 0 0 1.5.058l.345-9Z"
-                      clip-rule="evenodd"
-                    />
-                  </svg>
-                </a>
-              </div>
-              {% endif %}
             </div>
           </div>
-        </div>
-        {% empty %}
-        <p class="text-white font-medium text-center">
-          There are no reviews for this movie yet
-        </p>
-        {% endfor %}
-      </div>
-      <!-- Similar Movies -->
-      <div class="w-full flex flex-col gap-3 lg:w-1/3">
-        <p class="text-xl font-semibold text-pgreen text-center">
-          Similar Movies
-        </p>
-        {% for movie in similar_movies %}
-        <!-- Movie Card -->
-        <div
-          class="flex relative flex-col gap-2 rounded-md bg-pLightPurple w-full p-2 h-[260px] group transition-all ease-in-out duration-500 hover:scale-[102%] hover:shadow-md"
-        >
-          <!-- Rating -->
-          <div
-            class="absolute bg-pgreen z-10 top-3 left-3 p-1 text-xs font-semibold text-white rounded-full transition-all ease-in-out duration-500 group-hover:opacity-100 lg:opacity-50 w-fit"
-          >
-            <p class="flex gap-1 items-center">
-              {{ movie.average_rating | floatformat:2}}
+        </section>
 
+        <!-- Make a review -->
+        <section class="w-full lg:w-[360px] bg-pLightPurple/90 rounded-2xl shadow-xl border border-white/10 p-5 space-y-4">
+          {% if request.user.is_authenticated %}
+          <div class="flex justify-between items-start gap-3">
+            <div>
+              <p class="font-bold text-lg text-white">Leave a review</p>
+              <p class="text-xs text-gray-300">Rate the movie and share your thoughts.</p>
+            </div>
+            <div class="text-right">
+              <p class="text-2xl font-semibold text-pgreen">
+                {{ movie.average_rating|floatformat:1 }}
+              </p>
+              <p class="text-[11px] text-gray-300">Average rating</p>
+            </div>
+          </div>
+          <form
+            action=""
+            method="POST"
+            class="flex flex-col gap-3"
+          >
+            {% csrf_token %}
+            <label class="flex flex-col gap-1">
+              <span class="text-xs text-gray-200 font-semibold">Your username</span>
+              <input
+                type="text"
+                value="{{ request.user.username }}"
+                disabled
+                class="w-full px-3 py-2 rounded-md bg-pgray/50 border border-white/10 focus:outline-none focus:border-pgreen/80 focus:ring-2 focus:ring-pgreen/50 text-white text-sm"
+              />
+            </label>
+            <label class="flex flex-col gap-1 mt-1">
+              <span class="text-xs text-gray-200 font-semibold">Rating</span>
+              <div class="flex items-center gap-3">
+                <input
+                  type="range"
+                  name="rating"
+                  id="rating"
+                  min="0"
+                  max="5"
+                  step="0.5"
+                  value="3"
+                  class="w-full accent-pgreen cursor-pointer"
+                  oninput="ratingValue.innerText = this.value"
+                />
+                <span
+                  id="ratingValue"
+                  class="inline-flex items-center justify-center w-9 h-9 rounded-full bg-pgray text-pgreen font-semibold text-sm"
+                  >3</span
+                >
+              </div>
+            </label>
+            <label class="flex flex-col gap-1">
+              <span class="text-xs text-gray-200 font-semibold">Comment</span>
+              <textarea
+                name="comment"
+                id="comment"
+                rows="4"
+                class="w-full px-3 py-2 rounded-md bg-pgray/50 border border-white/10 focus:outline-none focus:border-pgreen/80 focus:ring-2 focus:ring-pgreen/50 text-white text-sm resize-none"
+                placeholder="Write your review here..."
+              ></textarea>
+            </label>
+            <button
+              type="submit"
+              class="mt-2 w-full inline-flex items-center justify-center gap-2 bg-gradient-to-r from-orangeOne to-orangeTwo text-white font-semibold py-2.5 rounded-lg shadow-lg hover:shadow-xl hover:from-orangeTwo hover:to-orangeOne transition duration-200 text-sm"
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
                 fill="currentColor"
-                class="w-4 h-4"
+                class="w-5 h-5"
               >
                 <path
                   fill-rule="evenodd"
-                  d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.006 5.404.434c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.434 2.082-5.005Z"
+                  d="M4.5 4.5h15a.75.75 0 01.75.75v9.75A2.25 2.25 0 0118 17.25H9.53l-3.9 3.12A.75.75 0 014.5 19.75v-15a.75.75 0 01.75-.75zm2.25 4.5A.75.75 0 017.5 8.25h9a.75.75 0 010 1.5h-9a.75.75 0 01-.75-.75zm0 3A.75.75 0 017.5 11.25h5.25a.75.75 0 010 1.5H7.5a.75.75 0 01-.75-.75z"
                   clip-rule="evenodd"
                 />
               </svg>
+              Submit review
+            </button>
+          </form>
+          {% else %}
+          <p class="text-sm text-gray-200 text-center">
+            Please
+            <a href="{% url 'login' %}" class="text-pgreen underline">login</a>
+            to leave a review.
+          </p>
+          {% endif %}
+        </section>
+      </div>
+
+      <!-- Bottom: reviews + similar movies -->
+      <div class="flex flex-col lg:flex-row gap-6">
+        <!-- Users comments -->
+        <section class="flex-1 bg-pLightPurple/90 rounded-2xl shadow-xl border border-white/10 p-5 space-y-4">
+          <div class="flex flex-row justify-between items-center">
+            <h2 class="text-lg font-bold">Reviews</h2>
+            <p class="text-xs text-pgreen/70">
+              {{ movie.reviews.count }} review{{ movie.reviews.count|pluralize }} total
             </p>
           </div>
-          <!-- Image -->
-          <div
-            class="h-3/5 w-full bg-center bg-no-repeat bg-cover rounded-lg lg:grayscale group-hover:grayscale-0 transition-all ease-in duration-500"
-            style="background-image: url('{{ movie.image.url }}')"
-          ></div>
-          <p class="font-medium text-sm text-white">{{ movie.title }}</p>
-          
-
-          <!-- Newly addes code for number of comments-->
-          <div class="flex justify-between">
-            <p class="text-xs font-bold text-pgreen">{{ movie.year }}</p>
-            <div class="flex text-xs">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="currentColor"
-                class="w-4 h-4"
-              >
-                <path
-                  d="M4.913 2.658c2.075-.27 4.19-.408 6.337-.408 2.147 0 4.262.139 6.337.408 1.922.25 3.291 1.861 3.405 3.727a4.403 4.403 0 00-1.032-.211 50.89 50.89 0 00-8.42 0c-2.358.196-4.04 2.19-4.04 4.434v4.286a4.47 4.47 0 002.433 3.984L7.28 21.53A.75.75 0 016 21v-4.03a48.527 48.527 0 01-1.087-.128C2.905 16.58 1.5 14.833 1.5 12.862V6.638c0-1.97 1.405-3.718 3.413-3.979z"
+          <div class="space-y-3">
+            {% for comment in movie.reviews.all %}
+            <article class="w-full bg-pgray/50 flex flex-col md:flex-row gap-4 p-3 rounded-xl border border-white/5">
+              <div class="flex gap-3 items-center md:w-1/5">
+                {% if comment.author.userprofile.avatar %}
+                <img
+                  src="{{ comment.author.userprofile.avatar.url }}"
+                  alt=""
+                  class="w-10 h-10 rounded-full object-cover"
                 />
-                <path
-                  d="M15.75 7.5c-1.376 0-2.739.057-4.086.169C10.124 7.797 9 9.103 9 10.609v4.285c0 1.507 1.128 2.814 2.67 2.94 1.243.102 2.5.157 3.768.165l2.782 2.781a.75.75 0 001.28-.53v-2.39l.33-.026c1.542-.125 2.67-1.433 2.67-2.94v-4.286c0-1.505-1.125-2.811-2.664-2.94A49.392 49.392 0 0015.75 7.5z"
-                />
-              </svg>
-              <p class="ml-2">{{ movie.reviews.count }}</p>
-            </div>
+                {% else %}
+                <div
+                  class="w-10 h-10 rounded-full bg-pLightPurple flex items-center justify-center text-sm font-semibold text-pgreen"
+                >
+                  {{ comment.author.username|first|upper }}
+                </div>
+                {% endif %}
+                <div class="flex flex-col">
+                  <strong class="text-sm">{{ comment.author }}</strong>
+                  <span class="text-[11px] text-gray-400">{{ comment.created|timesince }} ago</span>
+                </div>
+              </div>
+              <div class="flex flex-col gap-2 md:w-4/5">
+                <div class="flex justify-between items-center">
+                  <p class="text-sm text-pgreen flex items-center gap-1">
+                    <span class="text-lg">⭐</span>
+                    {{ comment.rate }}/5
+                  </p>
+                  {% if request.user == comment.author %}
+                  <div class="flex gap-2 text-xs">
+                    <a
+                      href="{% url 'update_comment' movie.slug comment.id %}"
+                      class="px-3 py-1 rounded-lg bg-pLightPurple hover:bg-pgray text-gray-100 border border-white/10"
+                      >Edit</a
+                    >
+                    <a
+                      href="{% url 'delete_comment' movie.slug comment.id %}"
+                      class="px-3 py-1 rounded-lg bg-pred/90 hover:bg-pred text-white"
+                      >Delete</a
+                    >
+                  </div>
+                  {% endif %}
+                </div>
+                <p class="text-sm text-gray-200 leading-relaxed">
+                  {{ comment.comment }}
+                </p>
+              </div>
+            </article>
+            {% empty %}
+            <p class="text-sm text-gray-300/90">
+              No reviews yet. Be the first to review this movie.
+            </p>
+            {% endfor %}
           </div>
-          <!-- End of newly addes code for numbmer of comments-->
-          <a
-            href="{% url 'review' movie.slug movie.id %}"
-            class="bg-gradient-to-br from-orangeOne to-orangeTwo text-center text-white w-full p-1 font-medium rounded-full"
-          >
-            Review
-          </a>
-        </div>
-        {% empty %}
-        <p class="text-white font-medium text-center">
-          There are no movies in this category yet
-        </p>
-        {% endfor %}
+        </section>
+
+        <!-- Similar Movies -->
+        <section class="w-full lg:w-1/3 bg-pLightPurple/90 rounded-2xl shadow-xl border border-white/10 p-5 space-y-3">
+          <h2 class="text-lg font-bold">Similar movies</h2>
+          <p class="text-xs text-gray-300/90">
+            More titles you might enjoy based on category
+            <span class="text-pgreen">{{ movie.category }}</span>.
+          </p>
+          <div class="space-y-3">
+            {% for similar_movie in similar_movies %}
+            <a
+              href="{% url 'review' similar_movie.slug similar_movie.id %}"
+              class="flex gap-3 rounded-xl bg-pgray/60 hover:bg-pgray p-3 transition-colors duration-150 border border-white/5"
+            >
+              <img
+                src="{{ similar_movie.image.url }}"
+                alt="{{ similar_movie.title }}"
+                class="w-14 h-20 object-cover rounded-md"
+              />
+              <div class="flex flex-col justify-between flex-1">
+                <div>
+                  <h3 class="text-sm font-semibold leading-tight">
+                    {{ similar_movie.title }}
+                  </h3>
+                  <p class="text-[11px] text-gray-400 mt-0.5">
+                    {{ similar_movie.year }}
+                    &middot;
+                    <span class="text-pgreen/70">{{ similar_movie.category }}</span>
+                  </p>
+                </div>
+                <div class="flex items-center justify-between text-[11px] text-gray-300">
+                  <span class="inline-flex items-center gap-1">
+                    ⭐
+                    <span
+                      >{{ similar_movie.average_rating|default:'0'|floatformat:1 }}</span
+                    >
+                  </span>
+                  <span class="text-gray-400">
+                    {{ similar_movie.reviews.count }} review{{ similar_movie.reviews.count|pluralize }}
+                  </span>
+                </div>
+              </div>
+            </a>
+            {% empty %}
+            <p class="text-xs text-gray-400">
+              No similar movies found yet.
+            </p>
+            {% endfor %}
+          </div>
+        </section>
       </div>
     </div>
-  </div>
-</main>
-<script src="script.js"></script>
-<script>
-  var slider = document.getElementById("rating");
-  var sliderValue = document.getElementById("rate");
-
-  slider.oninput = () => {
-    sliderValue.innerHTML = slider.value;
-  };
-</script>
+  </main>
 {% endblock content %}

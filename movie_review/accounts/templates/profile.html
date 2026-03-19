@@ -1,35 +1,32 @@
+{% extends 'main.html' %}
 {% load static %}
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profile of {{ request.user.first_name }} {{ request.user.last_name }}</title>
-    <link rel="stylesheet" href="{% static 'style.css' %}"/>
-</head>
-<body class="bg-pgray min-h-screen p-5">
-    <main class="flex flex-col gap-10 w-full">
+{% block title %}Profile of {{ request.user.first_name }} {{ request.user.last_name }}{% endblock title %}
+
+{% block content %}
+  {% include 'main_navbar.html' %}
+  <main class="bg-gradient-to-b from-slate-950/80 via-slate-950 to-black min-h-[calc(100vh-4rem)] p-5 text-gray-100">
+    <section class="flex flex-col gap-10 w-full max-w-6xl mx-auto">
       <!-- Top -->
       <div
-        class="bg-pLightPurple p-5 rounded-md gap-10 overflow-hidden w-full h-fit sm:w-2/3 flex flex-col sm:flex-row mx-auto"
+        class="bg-pLightPurple/95 p-5 md:p-6 rounded-2xl gap-8 overflow-hidden w-full flex flex-col sm:flex-row mx-auto shadow-2xl border border-white/10"
       >
         <!-- Left: Image -->
-        <div class="flex flex-col gap-5">
+        <div class="flex flex-col gap-4 items-center sm:items-start">
           <img
             src="{{ profile.avatar.url }}"
             alt="profile picture"
-            class="size-[200px] rounded-3xl"
+            class="size-[160px] md:size-[200px] rounded-3xl object-cover border border-white/20"
           />
           <div class="">
             <p class="font-bold text-pgreen text-xl">{{ profile.person.username }}</p>
-            <p class="text-gray-100">{{ profile.person.email }}</p>
+            <p class="text-gray-100 text-sm">{{ profile.person.email }}</p>
           </div>
         </div>
         <!-- Right -->
-        <div class="flex flex-col gap-4">
+        <div class="flex flex-col gap-3 text-sm">
           <p class="text-gray-300">
-            <span class="text-pgreen font-semibold">Full Name: </span> 
+            <span class="text-pgreen font-semibold">Full name: </span>
             {{ profile.person.first_name }} {{ profile.person.last_name }}
           </p>
           <p class="text-gray-300">
@@ -40,17 +37,19 @@
             {{ profile.person.email }}
           </p>
           <p class="text-gray-300">
-            <span class="text-pgreen font-semibold">Date Joined: </span> 
+            <span class="text-pgreen font-semibold">Date joined: </span>
             {{ profile.person.date_joined }}
           </p>
-          <p class="text-gray-300">
-            <span class="text-pgreen font-semibold">Uploads: </span> 
-            {{ user_movies.count }}
-          </p>
-          <p class="text-gray-300">
-            <span class="text-pgreen font-semibold">Reviews: </span> 
-            {{ user_reviews.count }}
-          </p>
+          <div class="flex gap-6 mt-2">
+            <p class="text-gray-300">
+              <span class="text-pgreen font-semibold">Uploads: </span>
+              {{ user_movies.count }}
+            </p>
+            <p class="text-gray-300">
+              <span class="text-pgreen font-semibold">Reviews: </span>
+              {{ user_reviews.count }}
+            </p>
+          </div>
         </div>
       </div>
       <!-- Bottom -->
@@ -58,7 +57,7 @@
         <!-- left: Movies -->
         <div class="lg:flex-1">
           <div class="">
-            <p class="font-bold text-xl pb-5 text-pgreen text-center">
+            <p class="font-bold text-lg md:text-xl pb-4 text-pgreen text-center">
               User's Movies
             </p>
           </div>
@@ -67,7 +66,7 @@
             {% for movie in user_movies %}
             <!-- Movie Card -->
             <div
-              class="flex relative flex-col gap-2 rounded-md bg-pLightPurple w-full p-2 h-[260px] group transition-all ease-in-out duration-500 hover:scale-[102%] hover:shadow-md"
+              class="flex relative flex-col gap-2 rounded-2xl bg-pLightPurple/90 w-full p-3 h-[260px] group transition-all ease-in-out duration-500 hover:scale-[1.02] hover:shadow-xl border border-white/10"
             >
               <!-- Rating -->
               <div
@@ -92,10 +91,10 @@
               </div>
               <!-- Image -->
               <div
-                class="h-3/5 w-full bg-center bg-no-repeat bg-cover rounded-lg lg:grayscale group-hover:grayscale-0 transition-all ease-in duration-500"
+                class="h-3/5 w-full bg-center bg-no-repeat bg-cover rounded-xl lg:grayscale group-hover:grayscale-0 transition-all ease-in duration-500"
                 style="background-image: url({{ movie.image.url }})"
               ></div>
-              <p class="font-medium text-sm text-white">{{ movie.title }}</p>
+              <p class="font-medium text-sm text-white mt-1">{{ movie.title }}</p>
           
 
               <!-- Newly addes code for number of comments-->
@@ -121,30 +120,30 @@
               <!-- End of newly addes code for numbmer of comments-->
               <a
                 href="{% url 'review' movie.slug movie.id %}"
-                class="bg-gradient-to-br from-orangeOne to-orangeTwo text-center text-white w-full p-1 font-medium rounded-full"
+                class="bg-gradient-to-r from-orangeOne to-orangeTwo text-center text-white w-full p-1.5 font-medium rounded-full text-xs mt-1"
               >
-                 Review
+                Open reviews
               </a>
             </div>
             {% empty %}
-            <p class="underline text-pgreen text-2xl font-bold mt-7">There are currently no movies.</p>
+            <p class="underline text-pgreen text-sm md:text-base font-semibold mt-4 text-center">There are currently no movies.</p>
             {% endfor %}
           </div>
         </div>
         <!-- Right: Reviews -->
         <div class="lg:flex-1 sm:max-w-[50%]">
           <div class="">
-            <p class="font-bold text-xl text-pgreen mb-5 text-center">
+            <p class="font-bold text-lg md:text-xl text-pgreen mb-4 text-center">
               User's Reviews
             </p>
             <div class="flex flex-col gap-5">
               {% for comment in user_reviews %}
         <!-- Review -->
         <div
-          class="w-full flex flex-col gap-1 justify-between p-5 bg-pLightPurple rounded-xl shadow-md sm:flex-row"
+          class="w-full flex flex-col gap-2 justify-between p-4 bg-pLightPurple/90 rounded-2xl shadow-md sm:flex-row border border-white/10"
         >
           <!-- Left: Avatar -->
-          <div class="w-14 h-14 rounded-full">
+          <div class="w-14 h-14 rounded-full overflow-hidden">
             <img
               src="{{comment.profile.avatar.url}}"
               alt="profile picture"
@@ -153,16 +152,16 @@
           </div>
           <!-- Right: Name, Time, Comment -->
           <div class="flex w-full sm:w-[85%] flex-col">
-            <p class="font-semibold text-pgreen">
+            <p class="font-semibold text-pgreen text-sm">
               {{ comment.person.username }}
             </p>
-            <p class="text-gray-300">{{ comment.created | timesince}} ago</p>
-            <p class="mt-2 text-justify text-white">
+            <p class="text-gray-300 text-xs">{{ comment.created | timesince}} ago</p>
+            <p class="mt-2 text-justify text-white text-sm">
               {{ comment.comment }}</p>
             <!-- Rate and Buttons -->
             <div class="w-full flex mt-2 justify-between">
               <!-- Rate -->
-              <div class="flex font-bold text-gray-300">
+              <div class="flex font-bold text-gray-300 text-sm items-center">
                 Rate
                 <span class="ml-2 flex text-pred"
                   >{{ comment.rate.rating }}<svg
@@ -181,7 +180,7 @@
               </div>
               <!-- Buttons -->
               {% if request.user == comment.person %}
-              <div class="flex gap-3">
+              <div class="flex gap-3 items-center">
                 <!-- Edit -->
                 <a href="{% url 'update_comment' comment.id %}"
                   ><svg
@@ -219,7 +218,7 @@
           </div>
         </div>
         {% empty %}
-        <p class="text-white font-medium text-center">
+        <p class="text-white font-medium text-center text-sm">
           There are no reviews for this movie yet
         </p>
         {% endfor %}
@@ -227,25 +226,6 @@
           </div>
         </div>
       </div>
-      <a
-        href="{% url 'home' %}"
-        class="fixed z-50 bg-pgreen bottom-5 right-5 flex gap-2 text-white p-3 font-semibold rounded-3xl shadow-md transition-all duration-500 hover:scale-105"
-      >
-        Home
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 24 24"
-          fill="currentColor"
-          class="w-6 h-6"
-        >
-          <path
-            d="M11.47 3.841a.75.75 0 0 1 1.06 0l8.69 8.69a.75.75 0 1 0 1.06-1.061l-8.689-8.69a2.25 2.25 0 0 0-3.182 0l-8.69 8.69a.75.75 0 1 0 1.061 1.06l8.69-8.689Z"
-          />
-          <path
-            d="m12 5.432 8.159 8.159c.03.03.06.058.091.086v6.198c0 1.035-.84 1.875-1.875 1.875H15a.75.75 0 0 1-.75-.75v-4.5a.75.75 0 0 0-.75-.75h-3a.75.75 0 0 0-.75.75V21a.75.75 0 0 1-.75.75H5.625a1.875 1.875 0 0 1-1.875-1.875v-6.198a2.29 2.29 0 0 0 .091-.086L12 5.432Z"
-          />
-        </svg>
-      </a>
-    </main>
-  </body>
-</html>
+    </section>
+  </main>
+{% endblock content %}

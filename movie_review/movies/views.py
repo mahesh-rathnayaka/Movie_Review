@@ -37,7 +37,8 @@ def index(request):
 # Add a movie
 @login_required(login_url='login')
 def add_movie(request):
-    profile = UserProfile.objects.get(person=request.user)
+    # Profile is optional for this view; avoid errors if missing
+    profile = UserProfile.objects.filter(person=request.user).first()
     if request.method == 'POST':
         title = request.POST.get('title')
         owner =request.user
@@ -79,7 +80,8 @@ def add_movie(request):
 @login_required(login_url='login')
 def movie_review_page(request, slug, _id):
     movie = Movie.objects.get(slug=slug, id=_id)
-    profile = UserProfile.objects.get(person=request.user)
+    # Profile may not exist for some logged-in users (e.g. superuser)
+    profile = UserProfile.objects.filter(person=request.user).first()
     comments = Comment.objects.filter(movie=movie)
 
     similar = Movie.objects.filter(category=movie.category)
@@ -87,14 +89,26 @@ def movie_review_page(request, slug, _id):
 
     #creating a review
     if request.method == 'POST':
-        rating = request.POST.get('rating')
-        comment = request.POST.get('comment')
+        rating_raw = request.POST.get('rating')
+        comment = (request.POST.get('comment') or '').strip()
 
-        if comment.strip() != "":
-            rate = Rating(movie=movie, rating=rating)
+        # Only proceed if there is a non-empty comment
+        if comment:
+            # Coerce rating to a safe numeric value within validators
+            try:
+                rating_value = float(rating_raw)
+            except (TypeError, ValueError):
+                rating_value = 1.0
+
+            # Rating model expects values between 1.00 and 10.00
+            if rating_value < 1.0:
+                rating_value = 1.0
+            if rating_value > 10.0:
+                rating_value = 10.0
+
+            rate = Rating(movie=movie, rating=rating_value)
             rate.save()
 
-            # Create the comment
             review = Comment(
                 person=request.user,
                 movie=movie,

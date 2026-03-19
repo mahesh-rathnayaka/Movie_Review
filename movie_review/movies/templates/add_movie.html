@@ -3,69 +3,27 @@
 {% block title %} Movie Review Website{% endblock title %}
 <!--  -->
 {% block content %}
-    <header class="text-pred">
-      
-      <!-- Desktop Navbar -->
-      <nav
-        class="hidden lg:flex justify-between flex-col w-full bg-pLightPurple shadow-sm py-3 px-10"
-      >
-        <div class="flex flex-row justify-between items-center gap-5">
-          <a href="/" class="font-bold text-2xl whitespace-nowrap">M Review</a>
+    {% include 'main_navbar.html' %}
 
-          <!-- Open and Close Profile popup -->
-          <div class="relative">
-            <img
-              src="images/user.jpg"
-              class="w-12 h-12 rounded-full cursor-pointer"
-              alt="profile picture"
-              onclick="toggleProfilePopUp()"
-            />
-            <div
-              class="hidden absolute z-50 w-72 bg-pLightPurple shadow-2xl outline outline-white/20 space-y-4 p-3 rounded-lg mt-2 right-1"
-              id="profile-popup"
-            >
-              <a
-                href="{% url 'profile' %}"
-                class="flex flex-col p-2 rounded-lg hover:bg-pgray/50"
-              >
-                <p class="font-bold text-pgreen text-lg">{{ request.user.username }}</p>
-                <p class="text-pgreen/50">{{ request.user.email }}</p>
-              </a>
-              <hr />
-              <a
-                href="{% url 'logout' %}"
-                class="flex justify-between font-bold text-red-400 p-2 rounded-lg hover:bg-pgray"
-                >Logout
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="currentColor"
-                  class="w-6 h-6"
-                >
-                  <path
-                    fill-rule="evenodd"
-                    d="M7.5 3.75A1.5 1.5 0 006 5.25v13.5a1.5 1.5 0 001.5 1.5h6a1.5 1.5 0 001.5-1.5V15a.75.75 0 011.5 0v3.75a3 3 0 01-3 3h-6a3 3 0 01-3-3V5.25a3 3 0 013-3h6a3 3 0 013 3V9A.75.75 0 0115 9V5.25a1.5 1.5 0 00-1.5-1.5h-6zm5.03 4.72a.75.75 0 010 1.06l-1.72 1.72h10.94a.75.75 0 010 1.5H10.81l1.72 1.72a.75.75 0 11-1.06 1.06l-3-3a.75.75 0 010-1.06l3-3a.75.75 0 011.06 0z"
-                    clip-rule="evenodd"
-                  /></svg
-              ></a>
-            </div>
-          </div>
+    <main class="px-4 py-8 bg-gradient-to-b from-slate-950/80 via-slate-950 to-black text-gray-100 min-h-[calc(100vh-4rem)]">
+      <section class="max-w-3xl mx-auto">
+        <div class="mb-6 text-center space-y-2">
+          <p class="text-xs font-semibold tracking-[0.2em] uppercase text-pgreen">Add a movie</p>
+          <h1 class="text-2xl md:text-3xl font-bold text-white">Share a new title with the community</h1>
+          <p class="text-sm text-gray-300 max-w-xl mx-auto">
+            Upload a poster, fill in the key details, and your movie will appear on the home page for others to review.
+          </p>
         </div>
-      </nav>
-    </header>
-    <main class="p-2">
-      <h1 class="text-pgreen text-xl font-bold mb-4 text-center">
-        Add a Movie
-      </h1>
-      <form
+
+        <form
         action=""
         method="post"
         enctype="multipart/form-data"
-        class="flex flex-col mx-auto w-fuu bg-pLightPurple text-white p-5 rounded-lg shadow-sm lg:w-1/2"
+        class="flex flex-col bg-pLightPurple/90 text-white p-6 rounded-2xl shadow-xl border border-white/10 gap-4"
       >
         {% csrf_token %}
         <!-- Title -->
-        <div class="">
+        <div>
           <label
             for="title"
             class="text-gray-200 text-sm font-bold leading-tight tracking-normal"
@@ -87,7 +45,7 @@
           <input type="file" name="image" id="image" class="p-3" />
         </div>
         <!-- Producer -->
-        <div class="">
+        <div>
           <label
             for="producer"
             class="text-gray-200 text-sm font-bold leading-tight tracking-normal"
@@ -102,7 +60,7 @@
           />
         </div>
         <!-- Year -->
-        <div class="">
+        <div>
           <label
             for="year"
             class="text-gray-200 text-sm font-bold leading-tight tracking-normal"
@@ -117,7 +75,7 @@
           />
         </div>
         <!-- Category -->
-        <div class="">
+        <div>
           <label
             for="category"
             class="text-gray-200 text-sm font-bold leading-tight tracking-normal"
@@ -146,7 +104,7 @@
           class="mb-5 mt-2 p-2 bg-pgray/50 focus:outline-none focus:border focus:border-pgreen font-normal w-full h-20 pl-3 text-sm border-gray-300 rounded border"
         ></textarea>
         <!-- Buttons -->
-        <div class="flex items-center justify-start w-full">
+        <div class="flex items-center justify-start w-full gap-3 pt-2">
           <button
             type="submit"
             class="focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pgreen transition duration-150 ease-in-out hover:bg-pgreen bg-pgreen/90 rounded text-white px-8 py-2 text-sm"
@@ -161,5 +119,6 @@
           </button>
         </div>
       </form>
+      </section>
     </main>
 {% endblock content %}

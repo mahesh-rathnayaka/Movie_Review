@@ -1,12 +1,12 @@
 {% load static %}
 
-<header class="text-pred">
+<header class="relative z-50 text-gray-100">
       <!-- Mobile Navbar -->
-      <nav class="flex flex-col w-full bg-pLightPurple shadow-sm p-3 lg:hidden">
+  <nav class="flex flex-col w-full bg-pLightPurple/95 backdrop-blur shadow-xl border-b border-white/10 p-3 lg:hidden">
         <!-- Top -->
         <div class="flex flex-row justify-between items-center" id="top">
           <a href="{% url 'home' %}" class="font-bold text-2xl whitespace-nowrap">
-            M Review</a
+            CineScope</a
           >
 
           <!-- Open and Close Mobile Nav -->
@@ -33,14 +33,14 @@
           <form
             action=""
             method="get"
-            class="w-full flex justify-between bg-pgray/40 py-2 px-4 rounded-lg gap-2"
+            class="w-full flex justify-between bg-pgray/80 py-2.5 px-4 rounded-2xl gap-2 border border-pgreen/60 shadow-lg"
           >
             <input
               type="text"
               name="q"
               id="Search"
               placeholder="Search movies..."
-              class="w-full bg-pgray rounded-md p-2 focus:outline-none text-lg"
+                class="w-full bg-transparent rounded-md p-1.5 focus:outline-none text-sm text-gray-100 placeholder-gray-400"
             />
             <button type="submit">
               <svg
@@ -64,24 +64,24 @@
             <li>
               <a
                 href="?sort=latest"
-                class="block text-center text-xl rounded-md p-2 duration-500 ease-in-out hover:bg-pgray hover:font-semibold"
+                class="block text-center text-sm rounded-md p-2 duration-200 ease-in-out hover:bg-pgray/70 hover:font-semibold"
                 >Latest Movies</a
               >
             </li>
             <li>
               <a
                 href="?sort=popular"
-                class="block text-center text-xl rounded-md p-2 duration-500 ease-in-out hover:bg-pgray"
+                class="block text-center text-sm rounded-md p-2 duration-200 ease-in-out hover:bg-pgray/70"
                 >Most Popular</a
               >
             </li>
           </ul>
           {% if request.user.is_authenticated %}
           <!-- Add Movie Button -->
-          <div class="flex w-4/5 sm:w-2/5 mx-auto mt-2">
+          <div class="flex w-4/5 sm:w-2/5 mx-auto mt-3">
             <a
               href="{% url 'add_movie' %}"
-              class="bg-pgreen flex justify-center text-white font-medium gap-3 p-2 rounded-md w-full"
+              class="bg-pgreen/90 flex justify-center text-white font-medium gap-3 py-2 px-3 rounded-xl w-full shadow-md hover:bg-pgreen hover:shadow-lg text-sm"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -102,7 +102,7 @@
           </div>
           <hr class="border-1 border-white/10 my-4" />
           <!-- Profile -->
-          <div class="w-full flex justify-between items-center">
+          <div class="w-full flex justify-between items-center mt-4">
             <a href="{% url 'profile' %}" class="flex flex-row items-center gap-5">
               <img
                 src="images/user.jpg"
@@ -110,8 +110,8 @@
                 class="w-12 h-12 rounded-full"
               />
               <div class="">
-                <p class="font-bold">Mahesh</p>
-                <p class="opacity-70">mahesh1234@gmail.com</p>
+                <p class="font-bold text-sm">Mahesh</p>
+                <p class="opacity-70 text-xs">mahesh1234@gmail.com</p>
               </div>
             </a>
             <!-- Logout -->
@@ -135,22 +135,22 @@
       </nav>
       <!-- Desktop Navbar -->
       <nav
-        class="hidden lg:flex justify-between flex-col w-full bg-pLightPurple shadow-sm py-3 px-10"
+        class="hidden lg:flex justify-between flex-col w-full bg-pLightPurple/95 backdrop-blur shadow-xl border-b border-white/10 py-3 px-10"
       >
         <div class="flex flex-row justify-between items-center gap-5">
-          <a href="/" class="font-bold text-2xl whitespace-nowrap">M Review</a>
+          <a href="/" class="font-bold text-2xl whitespace-nowrap">CineScope</a>
           <!-- Search Form -->
           <form
             action=""
             method="get"
-            class="w-full lg:w-[45%] flex justify-between bg-pgray/40 py-2 px-4 rounded-lg gap-2"
+            class="w-full lg:w-[45%] flex justify-between bg-pgray/80 py-2.5 px-4 rounded-2xl gap-2 border border-pgreen/60 shadow-lg"
           >
             <input
               type="text"
               name="q"
               id="Search"
               placeholder="Search movies..."
-              class="w-full bg-pgray rounded-md p-2 focus:outline-none text-lg"
+              class="w-full bg-transparent rounded-md p-1.5 focus:outline-none text-sm text-gray-100 placeholder-gray-400"
             />
             <button type="submit">
               <svg

@@ -13,30 +13,41 @@
     enctype="multipart/form-data"
   >
     {% csrf_token %}
-    <div class="flex justify-between">
-      <p class="font-semibold text-pgreen text-2xl">Update Movie</p>
-      <a
-        class="bg-pgreen p-2 rounded text-white w-fit"
-        href="{{ request.META.HTTP_REFERER }}"
-        >Go Back</a
-      >
-    </div>
+      {% include 'main_navbar.html' %}
 
-    {% for field in form %}
-    <label
-      for="username"
-      class="text-gray-800 text-sm font-bold leading-tight tracking-normal"
-      >{{ field.label }}</label
-    >
-    {{ field }} {% endfor %}
-    <!-- Submit -->
-    <div class="">
-      <input
-        type="submit"
-        value="Update"
-        class="py-2 px-5 bg-pgreen text-white font-semibold text-center rounded-xl w-full cursor-pointer"
-      />
-    </div>
-  </form>
-</main>
-{% endblock content %}
+      <main class="px-4 py-8 bg-gradient-to-b from-slate-950/80 via-slate-950 to-black min-h-[calc(100vh-4rem)] text-gray-100">
+        <section class="max-w-2xl mx-auto">
+          <div class="mb-6 text-center space-y-2">
+            <p class="text-xs font-semibold tracking-[0.2em] uppercase text-pgreen">
+              Edit movie
+            </p>
+            <h1 class="text-2xl md:text-3xl font-bold text-white">Update movie details</h1>
+            <p class="text-sm text-gray-300 max-w-xl mx-auto">
+              Adjust the information below to keep this title up to date.
+            </p>
+          </div>
+
+          <div class="bg-pLightPurple/90 shadow-xl rounded-2xl border border-white/10 p-6">
+            <form method="POST" enctype="multipart/form-data" class="space-y-4">
+              {% csrf_token %}
+              {{ form }}
+
+              <div class="flex items-center justify-between pt-4">
+                <button
+                  type="submit"
+                  class="px-6 py-2 bg-pgreen/90 text-white rounded-lg hover:bg-pgreen transition-transform transform hover:scale-[1.02] shadow-lg text-sm font-semibold"
+                >
+                  Save changes
+                </button>
+
+                <a
+                  href="{{ request.META.HTTP_REFERER }}"
+                  class="text-gray-300 hover:text-pgreen underline text-xs"
+                >
+                  Go back
+                </a>
+              </div>
+            </form>
+          </div>
+        </section>
+      </main>

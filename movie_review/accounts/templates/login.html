@@ -6,58 +6,97 @@
 {% block title %} Login - Movie Review Website {% endblock title %}
 <!--  -->
 {% block content %}
-<!--  -->
-<div class="flex items-center justify-center p-5">
-    <main class="'w-full flex md:w-1/2 lg:w-2/3 h-[80vh] shadow-md rounded-sm">
-      <!-- Left -->
-      <div
+<main class="bg-gradient-to-b from-slate-950/80 via-slate-950 to-black min-h-screen flex items-center justify-center px-4 py-10">
+  <div
+    class="flex flex-col lg:flex-row w-full max-w-5xl bg-pLightPurple/95 rounded-2xl shadow-2xl overflow-hidden border border-white/10"
+  >
+    <!-- Left -->
+    <div
       id="left"
-      class="lg:flex bg-cover bg-center h-full flex-1 rounded-sm"
+      class="hidden lg:flex bg-cover bg-center h-full flex-1"
       style="background-image: url({% static 'images/bg_image_1.jpg' %})"
-      ></div>
-      <!-- Right -->
-      <div
-        id="right"
-        class="w-full bg-white h-full rounded-sm lg:flex-1 lg:p-5 p-5 lg:rounded-r-sm"
-      >
-        <form action="" method="post" class="flex flex-col p-5 gap-6 text-pred">
-          <p>You are just a click away!</p>
-          {% csrf_token %}
-          <!-- Username -->
-          <div class="flex flex-col gap-2">
-            <label for="username">Username</label>
-            <input
-              type="text"
-              name="username"
-              id="username"
-              class="text-gray-600 focus:outline-none border focus:border-pgreen font-normal w-full h-10 rounded pl-3"
-            />
+    >
+      <div class="bg-gradient-to-t from-black/80 via-black/40 to-black/10 w-full h-full flex flex-col justify-between">
+        <header class="p-6 text-white">
+          <h1 class="text-2xl font-bold tracking-tight">CineScope</h1>
+        </header>
+        <div class="p-8 text-white space-y-4">
+          <p class="text-xs uppercase tracking-[0.25em] text-pgreen">
+            Welcome back
+          </p>
+          <h2 class="text-3xl font-bold leading-tight">
+            Sign in and continue your
+            <span class="text-porange">movie journey</span>
+          </h2>
+          <p class="text-sm text-gray-100">
+            Keep track of the movies you've watched, rated, and saved to
+            your watchlist in one modern dashboard.
+          </p>
+          <div class="space-y-1.5 mt-4 text-xs text-gray-200">
+            <div class="flex items-center gap-2">
+              <span class="w-2 h-2 bg-pgreen rounded-full"></span>
+              <p>Smart overview of your latest reviews</p>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="w-2 h-2 bg-pgreen rounded-full"></span>
+              <p>Quick access to favorite titles</p>
+            </div>
           </div>
-          <!-- Password -->
-          <div class="flex flex-col gap-2">
-            <label for="password">Password</label>
-            <input
-              type="password"
-              name="password"
-              id="password"
-              class="text-gray-600 focus:outline-none border focus:border-pgreen font-normal w-full h-10 rounded pl-3"
-            />
-          </div>
-          <!-- Button -->
-          <div class="w-full flex flex-col gap-3 justify-center items-center">
-            <button
-              type="submit"
-              class="font-semibold block w-3/5 p-2 bg-gradient-to-tr from-orangeOne to-orangeTwo text-white rounded-2xl"
-            >
-              Login
-            </button>
-            <p>
-              Don't have an account? &nbsp;
-              <a href="{% url 'register' %}" class="font-bold underline">Register</a>
-            </p>
-          </div>
-        </form>
+        </div>
       </div>
-    </main>
-</div>
+    </div>
+
+    <!-- Right -->
+    <div
+      id="right"
+      class="w-full bg-pLightPurple h-full lg:flex-1 p-6 md:p-8 flex items-center"
+    >
+      <form action="" method="post" class="flex flex-col gap-6 text-white w-full max-w-md mx-auto">
+        <header class="space-y-1">
+          <p class="text-xs uppercase tracking-[0.25em] text-pgreen">
+            Log in
+          </p>
+          <h2 class="text-2xl font-bold">Welcome back</h2>
+          <p class="text-sm text-gray-200">You are just a click away!</p>
+        </header>
+
+        {% csrf_token %}
+        <!-- Username -->
+        <div class="flex flex-col gap-2">
+          <label for="username" class="text-sm">Username</label>
+          <input
+            type="text"
+            name="username"
+            id="username"
+            autofocus
+            class="text-black bg-white focus:outline-none border border-white/10 focus:border-pgreen font-normal w-full h-10 rounded pl-3 text-sm text-left"
+          />
+        </div>
+        <!-- Password -->
+        <div class="flex flex-col gap-2">
+          <label for="password" class="text-sm">Password</label>
+          <input
+            type="password"
+            name="password"
+            id="password"
+            class="text-black bg-white focus:outline-none border border-white/10 focus:border-pgreen font-normal w-full h-10 rounded pl-3 text-sm text-left"
+          />
+        </div>
+        <!-- Button -->
+        <div class="w-full flex flex-col gap-3 justify-center items-center">
+          <button
+            type="submit"
+            class="font-semibold block w-full p-2.5 bg-gradient-to-r from-orangeOne to-orangeTwo text-white rounded-xl shadow-lg hover:shadow-xl hover:from-orangeTwo hover:to-orangeOne text-sm"
+          >
+            Login
+          </button>
+          <p class="text-xs text-gray-200">
+            Don't have an account?&nbsp;
+            <a href="{% url 'register' %}" class="font-bold underline text-pgreen">Register</a>
+          </p>
+        </div>
+      </form>
+    </div>
+  </div>
+</main>
 {% endblock content %}
