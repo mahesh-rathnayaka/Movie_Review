@@ -25,10 +25,12 @@ def index(request):
     elif sort == 'latest':
         movies = movies.order_by('-created_at')
 
-    profile = UserProfile.objects.get(person=request.user)
-    
+    profile = None
+    if request.user.is_authenticated:
+        profile = UserProfile.objects.filter(person=request.user).first()
+
     return render(request, 'index.html', {
-        'movies':movies,
+        'movies': movies,
         'profile': profile
     }) 
 
